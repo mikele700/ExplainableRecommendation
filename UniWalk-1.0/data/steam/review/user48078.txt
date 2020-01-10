@@ -1,0 +1,1 @@
+quando preciono -U- para subir o eixo trazeiro o jogo fecha

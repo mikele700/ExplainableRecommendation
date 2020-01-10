@@ -1,0 +1,3 @@
+It's awesome
+Annoying memory leaks, whichs causes long long lag spikes less than 1 fps which last for a few minutes at a time.
+Awesome!

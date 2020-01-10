@@ -1,0 +1,4 @@
+SsO IF YOU ARE GOING TO GIVE ME A SWORD, ATLEAST LET ME KNOW HOW TO USE IT! and unity 101 put a damn exit button.  here ill do it for you   if (Input.GetKey(-escape-))            Application.Quit(); You are welcome.
+SO F**KING ADDICTIVE
+queue time seem to have been fixed for a few days, but they seem to be back, idk if its because of the recent popularity but it is quite annoying , once you get in the game however it is a ton of fun
+Amazing game, if you like westerns and counter strike you will love this, great game for a bit of fun 8/10 cant wait till they add the rest of the game in.

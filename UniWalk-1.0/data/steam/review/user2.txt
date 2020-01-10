@@ -1,0 +1,6 @@
+A suitably punishing roguelike platformer.  Winning feels good.  Progressive unlocks mean a good slog ending in failure doesn't feel like a waste.
+-Run for fun? What the hell kind of fun is that?-
+Elegant integration of gameplay, story, world development and aesthetic.
+Random drops and random quests, with stat points.  Animation style reminiscent of the era before the Voodoo card.
+Fun balance of tactics and strategy.  Potential for very rewarding battles on smaller maps.  Can become a bit of a grind on larger maps (>200 stars).
+Fun world builder, with plenty of option of how you want challenge served to you.  Gnome pathing sometimes frustrating if you expand very very quickly.

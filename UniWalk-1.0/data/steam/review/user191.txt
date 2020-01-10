@@ -1,0 +1,2 @@
+problemas com serve e conexão
+Bom jogo depois de um tempo fica repetitivo e demora ao carregar

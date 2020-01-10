@@ -1,0 +1,1 @@
+Waited 3+ Minutes for training still didn't load Alt+F40/10

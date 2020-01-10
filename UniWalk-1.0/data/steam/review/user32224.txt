@@ -1,0 +1,2 @@
+best game ever
+keeps saying fatal error in gc and too many heaps and I cant get it working

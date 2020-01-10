@@ -1,0 +1,1 @@
+Definitely recommend. Works great with games that when alt+tabbed or loses focus, forces itself out of fullscreen and into windowed. Tried with various games, noticed no performance loss.

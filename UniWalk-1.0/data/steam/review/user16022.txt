@@ -1,0 +1,3 @@
+MELHOR JOGO DA STEAM!!!!
+Uma bosta.
+Rust vem sofrendo de uma má otimização oq torna impossivel ter uma boa performance em um pc ruim (meu caso).Espero que esse problema seja corrigido o mais rapido possível.

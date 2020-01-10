@@ -1,0 +1,1 @@
+All settings on low, crashes as soon as the world loads.

@@ -1,0 +1,1 @@
+Super fun puzzle type game. The hacking mechanisms are simplified, yet realistic. The inclusion of tracing is a nice touch to fit a timer into some of the puzzles.Definitely recommend to anyone interested in Computer Science in general
