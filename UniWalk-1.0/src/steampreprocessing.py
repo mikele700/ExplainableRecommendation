@@ -79,19 +79,20 @@ def read_users(filename, items_id):
             obj = json.loads(data)
             if ("user_id" in obj) and ("items" in obj) and (len(obj["items"])>0):
                 users.update({obj["user_id"]:u_id})
-                #user_items = obj["items"]
-                #liked_items.append([])
-                #for i in range(len(user_items)):
-                #    if (user_items[i]["item_id"] in items_id) and (user_items[i]["playtime_forever"] > 210):
-                #        liked_items[u_id].append(items_id[user_items[i]["item_id"]])
+                user_items = obj["items"]
+                liked_items.append([])
+                for i in range(len(user_items)):
+                    if (user_items[i]["item_id"] in items_id) and (user_items[i]["playtime_forever"] > 210):
+                        liked_items[u_id].append(items_id[user_items[i]["item_id"]])
                 u_id += 1
                 
     return users, liked_items, u_id
 
 def read_reviews(filename, items_id, users_id, liked_items, len_u_id):
-    #ratings_filename = "../data/steam/input/ratings.txt"
-    #with open(ratings_filename, mode='w') as f:
-    with open(filename, 'r', encoding="utf8") as user_reviews_file:
+    ratings_filename = "../data/steam/input/ratings.txt"
+    past_users = []
+    with open(ratings_filename, mode='w') as f:
+        with open(filename, 'r', encoding="utf8") as user_reviews_file:
             for data in user_reviews_file:
                 data = data.replace("recommend\': True", "recommend\': \'True\'")
                 data = data.replace("recommend\': False", "recommend\': \'False\'")
@@ -116,31 +117,34 @@ def read_reviews(filename, items_id, users_id, liked_items, len_u_id):
                 data = data.replace(',]',']')
             # parse file
                 obj = json.loads(data)
-                if ("user_id" in obj) and ("reviews" in obj) and (obj["user_id"] in users_id):
+                if ("user_id" in obj) and ("reviews" in obj) and (obj["user_id"] in users_id) and (obj["user_id"] not in past_users):
+                    past_users.append(obj["user_id"])
                     reviews = obj["reviews"]
                     u_id = users_id[obj["user_id"]]
-                    reviews_filename = "../data/steam/review/user%d.txt" % u_id
-                    with open(reviews_filename, mode='w', encoding="utf8") as rv:
-                        for i in range(len(reviews)):
-                            #if ("item_id" in reviews[i]) and ("recommend" in reviews[i]) and (reviews[i]["item_id"] in items_id):
-                                #i_id = items_id[reviews[i]["item_id"]] + len_u_id
-                                #f.write("%d\t%d" %(u_id, i_id))
-                                #if reviews[i]["recommend"] == "True":
-                                #    f.write("\t%f\n" %(1.0))
-                                #else:
-                                #    f.write("\t%f\n" %(0.0))
+                    past_reviews = []
+                    #reviews_filename = "../data/steam/review/user%d.txt" % u_id
+                    #with open(reviews_filename, mode='w', encoding="utf8") as rv:
+                    for i in range(len(reviews)):
+                            if ("item_id" in reviews[i]) and ("recommend" in reviews[i]) and (reviews[i]["item_id"] in items_id) and (reviews[i]["item_id"] not in past_reviews):
+                                past_reviews.append(reviews[i]["item_id"])
+                                i_id = items_id[reviews[i]["item_id"]] + len_u_id
+                                f.write("%d\t%d" %(u_id, i_id))
+                                if reviews[i]["recommend"] == "True":
+                                    f.write("\t%f\n" %(1.0))
+                                else:
+                                    f.write("\t%f\n" %(0.0))
                                     
-                                #if (i_id - len_u_id) in liked_items[u_id]:
-                                #    liked_items[u_id].remove(i_id - len_u_id)
+                                if (i_id - len_u_id) in liked_items[u_id]:
+                                    liked_items[u_id].remove(i_id - len_u_id)
                                     
-                            if "review" in reviews[i]:
-                                rv.write(reviews[i]["review"] + "\n")
+                            #if "review" in reviews[i]:
+                            #    rv.write(reviews[i]["review"] + "\n")
                             
                             
                                 
-        #for i in range(len(liked_items)):
-        #    for j in range(len(liked_items[i])):
-        #        f.write("%d\t%d\t%f\n" %(i, liked_items[i][j] + len_u_id, 0.5))
+        for i in range(len(liked_items)):
+            for j in range(len(liked_items[i])):
+                f.write("%d\t%d\t%f\n" %(i, liked_items[i][j] + len_u_id, 0.5))
                                 
     return
 
