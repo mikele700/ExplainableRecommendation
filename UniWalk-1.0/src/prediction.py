@@ -59,8 +59,12 @@ def prediction(args, numfolds):
         
         # Classification
 		profile = list()
-		for i in range(args.max_u_id + 1):
-		    profile.append(random.randint(0,4))
+		#for i in range(args.max_u_id + 1):
+		#    profile.append(random.randint(0,4))
+		profile_filename = args.inputpath + "random_profile.txt"
+		with open(profile_filename, mode='r') as f:
+		    for line in f:
+		        profile.append(int(line))
         
 		# Dr: set of the highest rated entities
 		p_graph = args.graphpath + "p_graph_%s_%d.txt" % (args.graphparas, fold)
@@ -175,12 +179,21 @@ def prediction(args, numfolds):
 			for u, i, p, ti, tis, tu, tus, fr in zip(test.u, test.i, prediction, top_items, top_item_similarities, top_users, top_user_similarities, friends):
 				f.write("%d\t%d\t%.5f\t%d" % (u, i, p, items_profile[int(i) - args.min_i_id].index(max(items_profile[int(i) - args.min_i_id]))))
 				for j in range(3):
+					f.write("\t")
 					if len(ti) > j:
-						f.write("\ti%d: %d\t%.5f" % (j, ti[j], tis[j]))
+						f.write("%d\t%.5f" % (ti[j], tis[j]))
+					else:
+						f.write("\t")
+				for j in range(3):
+					f.write("\t")
 					if len(tu) > j:
-						f.write("\tu%d: %d\t%.5f" % (j, tu[j], tus[j]))
-				for j in range(len(fr)):
-					f.write("\tf%d: %d" % (j, fr[j]))
+						f.write("%d\t%.5f" % (tu[j], tus[j]))
+					else:
+						f.write("\t")
+				for j in range(5):
+					f.write("\t")
+					if len(fr) > j:
+						f.write("%d" % (fr[j]))
 				f.write("\n")
                     
 		print("%s is made" %pred_filename)
