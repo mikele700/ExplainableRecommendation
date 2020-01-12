@@ -57,34 +57,37 @@ def read_users(filename, items_id):
     users = dict()
     liked_items = list()
     u_id = 0
-    with open(filename, 'r', encoding="utf8") as user_file:
-        for data in user_file:
-            data = data.replace("\\","-")
-            data = data.replace(": \"", ": \'")
-            data = data.replace("\", ", "\', ")
-            data = data.replace("\"}", "\'}")
-            data = data.replace("\"", "-")
-            data = data.replace("{\'", "{\"")
-            data = data.replace("\': \'", "\": \"")
-            data = data.replace("\', \'", "\", \"")
-            data = data.replace("\'}", "\"}")
-            data = data.replace("\': [", "\": [")
-            data = data.replace("\': ", "\": ")
-            data = data.replace(", \'", ", \"")
-            data = data.replace('\t','')
-            data = data.replace('\n','')
-            data = data.replace(',}','}')
-            data = data.replace(',]',']')
-        # parse file
-            obj = json.loads(data)
-            if ("user_id" in obj) and ("items" in obj) and (len(obj["items"])>0):
-                users.update({obj["user_id"]:u_id})
-                user_items = obj["items"]
-                liked_items.append([])
-                for i in range(len(user_items)):
-                    if (user_items[i]["item_id"] in items_id) and (user_items[i]["playtime_forever"] > 210):
-                        liked_items[u_id].append(items_id[user_items[i]["item_id"]])
-                u_id += 1
+    users_filename = "../data/steam/input/users.txt"
+    with open(users_filename, mode='w') as f:
+        with open(filename, 'r', encoding="utf8") as user_file:
+            for data in user_file:
+                data = data.replace("\\","-")
+                data = data.replace(": \"", ": \'")
+                data = data.replace("\", ", "\', ")
+                data = data.replace("\"}", "\'}")
+                data = data.replace("\"", "-")
+                data = data.replace("{\'", "{\"")
+                data = data.replace("\': \'", "\": \"")
+                data = data.replace("\', \'", "\", \"")
+                data = data.replace("\'}", "\"}")
+                data = data.replace("\': [", "\": [")
+                data = data.replace("\': ", "\": ")
+                data = data.replace(", \'", ", \"")
+                data = data.replace('\t','')
+                data = data.replace('\n','')
+                data = data.replace(',}','}')
+                data = data.replace(',]',']')
+            # parse file
+                obj = json.loads(data)
+                if ("user_id" in obj) and ("items" in obj) and (len(obj["items"])>0):
+                    users.update({obj["user_id"]:u_id})
+                    f.write("%s\n" %obj["user_id"])
+                    user_items = obj["items"]
+                    liked_items.append([])
+                    for i in range(len(user_items)):
+                        if (user_items[i]["item_id"] in items_id) and (user_items[i]["playtime_forever"] > 210):
+                            liked_items[u_id].append(items_id[user_items[i]["item_id"]])
+                    u_id += 1
                 
     return users, liked_items, u_id
 
@@ -156,8 +159,8 @@ if __name__ == '__main__':
     items_id, len_i_id = read_items(filename)
     filename = "../data/steam/input/australian_users_items.json"
     users_id, liked_items, len_u_id = read_users(filename, items_id)
-    filename = "../data/steam/input/australian_user_reviews.json"
-    read_reviews(filename, items_id, users_id, liked_items, len_u_id)
+    #filename = "../data/steam/input/australian_user_reviews.json"
+    #read_reviews(filename, items_id, users_id, liked_items, len_u_id)
     #print(len_u_id)
     #print(len_i_id)
     
