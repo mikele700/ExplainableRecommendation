@@ -24,7 +24,7 @@ Import packages
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 import numpy as np
 import pandas as pd
-import random
+
 
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -48,7 +48,7 @@ def prediction(args, numfolds):
 		bias_filename = args.learningpath + "bias_" + args.learningparas + "_%d.txt" % fold
 		ent_filename = args.learningpath + "entities_" + args.learningparas + "_%d.txt" % fold
 
-		test_filename = args.inputpath + "b%d.csv" % fold
+		test_filename = args.inputpath + "test%d.csv" % fold
 
 		# Read test set, entities' indices, vectors, and biases
 		test = pd.read_csv(test_filename, sep='\t', names=['u', 'i', 'r'])
@@ -59,8 +59,6 @@ def prediction(args, numfolds):
         
         # Classification
 		profile = list()
-		#for i in range(args.max_u_id + 1):
-		#    profile.append(random.randint(0,4))
 		profile_filename = args.inputpath + "random_profile.txt"
 		with open(profile_filename, mode='r') as f:
 		    for line in f:

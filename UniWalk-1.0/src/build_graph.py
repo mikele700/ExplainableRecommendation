@@ -37,18 +37,19 @@ def build_graph(args, numfolds):
 	
 	# Read ratings
 	header = ['u', 'i', 'r']
-	buckets = list()
-	for fold in range(numfolds):
-		input_rating = args.inputpath + "b%d.csv" % fold
-		buckets.append(pd.read_csv(input_rating, sep='\t', names=header))
+	#buckets = list()
+	#for fold in range(numfolds):
+	#	input_rating = args.inputpath + "b%d.csv" % fold
+	#	buckets.append(pd.read_csv(input_rating, sep='\t', names=header))
 
 	# For all folds
 	for fold in range(numfolds):
 		# 0. Get ratings
-		train = pd.DataFrame()
-		for i, b in enumerate(buckets):
-			if i != fold:
-				train = pd.concat([train, b])
+		#train = pd.DataFrame()
+		#for i, b in enumerate(buckets):
+		#	if i != fold:
+		#		train = pd.concat([train, b])
+		train = pd.read_csv(args.inputpath + "train%d.csv" % (fold), sep='\t', names=header)
 		num_rating = len(train.r)
 
 		# 1. Read trust network
@@ -62,9 +63,10 @@ def build_graph(args, numfolds):
 				ui_weights.data[j] = r
 
 		# 3. Complete user-user weights
-		uu_weights = coo_matrix((np.zeros(num_uu_links), (network.u1, network.u2)))
-		for j in range(num_uu_links):
-				uu_weights.data[j] = args.c
+		if num_uu_links > 0:
+			uu_weights = coo_matrix((np.zeros(num_uu_links), (network.u1, network.u2)))
+			for j in range(num_uu_links):
+    				uu_weights.data[j] = args.c
 
 		# 4. Set filepaths	
 		p_graph_filename = args.graphpath + "p_graph_%s_%d.txt" % (args.graphparas, fold)
@@ -73,9 +75,10 @@ def build_graph(args, numfolds):
 		# 5. Save graph
 		with open(p_graph_filename, mode='w') as f:
 			# Save uu edges
-			for u1, u2, w in zip(uu_weights.row, uu_weights.col, uu_weights.data):
-				f.write("%d\t%d\t%.1f\n" % (u1, u2, w))
-				f.write("%d\t%d\t%.1f\n" % (u2, u1, w))
+			if num_uu_links > 0:
+				for u1, u2, w in zip(uu_weights.row, uu_weights.col, uu_weights.data):
+					f.write("%d\t%d\t%.1f\n" % (u1, u2, w))
+					f.write("%d\t%d\t%.1f\n" % (u2, u1, w))
 
 			# Save ui edges
 			for u, i, w in zip(ui_weights.row, ui_weights.col, ui_weights.data):
@@ -84,9 +87,10 @@ def build_graph(args, numfolds):
 
 		with open(n_graph_filename, mode='w') as f:
 			# Save uu edges
-			for u1, u2, w in zip(uu_weights.row, uu_weights.col, uu_weights.data):
-				f.write("%d\t%d\t%.1f\n" % (u1, u2, maxR + minR - w))
-				f.write("%d\t%d\t%.1f\n" % (u2, u1, maxR + minR - w))
+			if num_uu_links > 0:
+				for u1, u2, w in zip(uu_weights.row, uu_weights.col, uu_weights.data):
+					f.write("%d\t%d\t%.1f\n" % (u1, u2, maxR + minR - w))
+					f.write("%d\t%d\t%.1f\n" % (u2, u1, maxR + minR - w))
 
 			# Save ui edges
 			for u, i, w in zip(ui_weights.row, ui_weights.col, ui_weights.data):

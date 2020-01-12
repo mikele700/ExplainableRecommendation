@@ -29,7 +29,8 @@ from par import parse_args, set_paras, set_files, set_basic_info, print_args
 from embedding import embedding
 from prediction import prediction
 from build_graph import build_graph
-from split_5_folds import split_5_folds
+#from split_5_folds import split_5_folds
+from xval import xval
 sys.path.insert(0, os.path.dirname(os.path.abspath('.')))
 
 
@@ -57,9 +58,11 @@ if __name__ == '__main__':
 	set_files(args)
 	set_basic_info(args)
 	print_args(args)
+    
 
 	# 2. Split input ratings into 5 folds
 	#split_5_folds(args.dataset, 5)
+	#xval(args.dataset, 5)
 
 	# 3. Build graph
 	#build_graph(args, 5)

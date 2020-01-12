@@ -35,20 +35,22 @@ Read input
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 # Read training set
 def read_train_ratings(args, fold):
-	train = pd.DataFrame()
-	for f in range(5):
-		input_filename = args.inputpath + 'b%d.csv' % f 
-		b = pd.read_csv(input_filename, sep='\t', names=['u', 'i', 'r'])
-		if f != fold:
-			train = pd.concat([train, b])
+	train = pd.read_csv(args.inputpath + "train%d.csv" % (fold), sep='\t', names=['u', 'i', 'r'])
+	#train = pd.DataFrame()
+	#for f in range(5):
+	#	input_filename = args.inputpath + 'b%d.csv' % f 
+	#	b = pd.read_csv(input_filename, sep='\t', names=['u', 'i', 'r'])
+	#	if f != fold:
+	#		train = pd.concat([train, b])
 	return train
 
 
 # Read test set
 def read_test_ratings(args, fold):
-	test = pd.DataFrame()
-	input_filename = args.inputpath + 'b%d.csv' % fold
-	test = pd.read_csv(input_filename, sep='\t', names=['u', 'i', 'r'])
+	#test = pd.DataFrame()
+	#input_filename = args.inputpath + 'b%d.csv' % fold
+	#test = pd.read_csv(input_filename, sep='\t', names=['u', 'i', 'r'])
+	test = pd.read_csv(args.inputpath + "test%d.csv" % (fold), sep='\t', names=['u', 'i', 'r'])
 	return test
 	
 
