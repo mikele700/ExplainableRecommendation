@@ -210,13 +210,13 @@ Embedding a single set of walks
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 def learning_1_unit(args, fold, node_to_th, g, walks, Z, B, Dp, sampling, train, bias_v, vec_s_v, vec_up_v, vec_un_v):
 	# Get parameters
-	a = args.alpha
-	b = args.beta
-	m = args.gamma
+	a = float(args.alpha)
+	b = float(args.beta)
+	m = float(args.gamma)
 	mu = args.mu
-	lz = args.lz
-	lb = args.lb
-	lr = args.lr
+	lz = float(args.lz)
+	lb = float(args.lb)
+	lr = float(args.lr)
 	ws = args.ws
 	dim = args.dim
 	minR = args.min_r
