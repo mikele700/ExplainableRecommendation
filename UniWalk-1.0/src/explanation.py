@@ -4,7 +4,7 @@ import random
 import math
 import pandas as pd
 
-def explanation(df, randUser, args):
+def explanation(df, randUser, args, similarity_threshold):
     if args.dataset == "steam":
         users, items = detail(args)
         user = users[randUser]
@@ -17,39 +17,39 @@ def explanation(df, randUser, args):
         else:
             s += "item " + str(int(row['item']))
         
-        if not math.isnan(row['i0']):
+        if not (math.isnan(row['i0'])) and (float(row['i0sim']) > similarity_threshold):
             s += "\nYou like other similiar items:\n- "
             if args.dataset == "steam":
                 s += detailitem(int(row['i0']), items, args)
             else:
                 s += "Item " + str(int(row['i0']))
-        if not math.isnan(row['i1']):
+        if not math.isnan(row['i1']) and (float(row['i1sim']) > similarity_threshold):
             s += "\n- "
             if args.dataset == "steam":
                 s += detailitem(int(row['i1']), items, args)
             else:
                 s += "Item " + str(int(row['i1']))
-        if not math.isnan(row['i2']):
+        if not math.isnan(row['i2']) and (float(row['i2sim']) > similarity_threshold):
             s += "\n- "
             if args.dataset == "steam":
                 s += detailitem(int(row['i2']), items, args)
             else:
                 s += "Item " + str(int(row['i2']))
         
-        if not math.isnan(row['u0']):
+        if not math.isnan(row['u0']) and (float(row['u0sim']) > similarity_threshold):
             exp_u = "\nMoreover, the following users, who are similiar to you, preferred that item:\n"
             if args.dataset == "steam":
                 u0 = users[int(row['u0'])]
             else:
                 u0 = str(int(row['u0']))
             s += exp_u + "- User: " + u0
-        if not math.isnan(row['u1']):
+        if not math.isnan(row['u1']) and (float(row['u1sim']) > similarity_threshold):
             if args.dataset == "steam":
                 u1 = users[int(row['u1'])]
             else:
                 u1 = str(int(row['u1']))
             s += "\n- User: " + u1
-        if not math.isnan(row['u2']):
+        if not math.isnan(row['u2']) and (float(row['u2sim']) > similarity_threshold):
             if args.dataset == "steam":
                 u2 = users[int(row['u2'])]
             else:
@@ -88,10 +88,10 @@ def explanation(df, randUser, args):
                 f4 = str(int(row['f4']))
             s += "\n- Friend: " + f4
             
-        s += "\n"
+        s += "\n---------------------------------------------------\n"
         print(s)
 
-def persexplanation(df, randUser, profile):
+def persexplanation(df, randUser, profile, similarity_threshold):
     if args.dataset == "steam":
         users, items = detail(args)
         user = users[randUser]
@@ -107,26 +107,26 @@ def persexplanation(df, randUser, profile):
         if profile[randUser] == int(row['cluster']):
              s += "\nUsers with personality similar to yours preferred that item"
         
-        if not math.isnan(row['i0']):
+        if not math.isnan(row['i0']) and (float(row['i0sim']) > similarity_threshold):
             s += "\nYou like other similiar items:\n- "
             if args.dataset == "steam":
                 s += detailitem(int(row['i0']), items, args)
             else:
                 s += "Item " + str(int(row['i0']))
-        if not math.isnan(row['i1']):
+        if not math.isnan(row['i1']) and (float(row['i1sim']) > similarity_threshold):
             s += "\n- "
             if args.dataset == "steam":
                 s += detailitem(int(row['i1']), items, args)
             else:
                 s += "Item " + str(int(row['i1']))
-        if not math.isnan(row['i2']):
+        if not math.isnan(row['i2']) and (float(row['i2sim']) > similarity_threshold):
             s += "\n- "
             if args.dataset == "steam":
                 s += detailitem(int(row['i2']), items, args)
             else:
                 s += "Item " + str(int(row['i2']))
                 
-        if not math.isnan(row['u0']):
+        if not math.isnan(row['u0']) and (float(row['u0sim']) > similarity_threshold):
             exp_u = "\nMoreover, the following users, who are similiar to you, preferred that item:\n"
             if args.dataset == "steam":
                 u0 = users[int(row['u0'])]
@@ -135,7 +135,7 @@ def persexplanation(df, randUser, profile):
             s += exp_u + "- User: " + u0
             if profile[randUser] == profile[int(row['u0'])]:
                 s += "\twho also presents a personality similar to yours"
-        if not math.isnan(row['u1']):
+        if not math.isnan(row['u1']) and (float(row['u1sim']) > similarity_threshold):
             if args.dataset == "steam":
                 u1 = users[int(row['u1'])]
             else:
@@ -143,7 +143,7 @@ def persexplanation(df, randUser, profile):
             s += "\n- User: " + u1
             if profile[randUser] == profile[int(row['u1'])]:
                 s += "\twho also presents a personality similar to yours"
-        if not math.isnan(row['u2']):
+        if not math.isnan(row['u2']) and (float(row['u2sim']) > similarity_threshold):
             if args.dataset == "steam":
                 u2 = users[int(row['u2'])]
             else:
@@ -226,17 +226,23 @@ if __name__ == '__main__':
     set_basic_info(args)
     fold = 0
     mode = 2
+    similarity_threshold = 0.005
+    #1/1000 is one occurrence on 142 windows
+    #5/1000 is one occurence on 28 windows
+    #1/100 is one occurrence on 14 windows
     
     names = ['user', 'item', 'predRating', 'cluster', 'i0', 'i0sim', 'i1', 'i1sim', 'i2', 'i2sim', 'u0', 'u0sim', 'u1', 'u1sim', 'u2', 'u2sim', 'f0', 'f1', 'f2', 'f3', 'f4']
     expDF = pd.read_csv("../data/%s/prediction/pred_%d.txt" %(args.dataset, fold), sep='\t', names=names, index_col=False)
     randUser = random.randrange(args.min_u_id, args.max_u_id + 1)
+    #randUser = 71
+    #print(expDF.loc[expDF['user'] == randUser].sort_values(by=['predRating'], ascending=False).head(3))
     
     if mode == 0:
         expDF = expDF.loc[expDF['user'] == randUser].sort_values(by=['predRating'], ascending=False).head(3)
         if expDF.empty:
             print("No recommendation available for target user " + str(randUser))
         else:
-            explanation(expDF, randUser, args)
+            explanation(expDF, randUser, args, similarity_threshold)
     elif mode == 1:
         profile = list()
         profile_filename = args.inputpath + "random_profile.txt"
@@ -247,7 +253,7 @@ if __name__ == '__main__':
         if expDF.empty:
             print("No recommendation available for target user " + str(randUser))
         else:
-            persexplanation(expDF, randUser, profile)
+            persexplanation(expDF, randUser, profile, similarity_threshold)
     elif mode == 2:
         profile = list()
         profile_filename = args.inputpath + "random_profile.txt"
@@ -269,7 +275,7 @@ if __name__ == '__main__':
         if expDF.empty:
             print("No recommendation available for target user " + str(randUser))
         else:
-            persexplanation(expDF, randUser, profile)
+            persexplanation(expDF, randUser, profile, similarity_threshold)
 
 
 
