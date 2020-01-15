@@ -18,7 +18,7 @@ def read_ratings(filename, user_file):
         obj = json.load(rating_file)
         df = pd.DataFrame(obj['Series']['Row'], columns=['user','stars','time','paid','item','review'])
     
-    df = df.drop_duplicates()
+    df = df.drop_duplicates(subset=['user', 'item'])
     #item_filename = "../data/epinions/input/items.txt"
     item_filename = "../data/epinions/input/prova.txt"
     with open(item_filename, 'w', encoding="utf8") as item_file:
@@ -26,7 +26,7 @@ def read_ratings(filename, user_file):
                 if row['user'] not in users:
                     users.update({row['user']:u_id})
                     user_id.append(u_id)
-                    user_file.write("%s\n" %row['user'])
+                    #user_file.write("%s\n" %row['user'])
                     u_id += 1
                 else:
                     user_id.append(users[row['user']])
@@ -72,7 +72,8 @@ def read_links(filename, users, u_id, user_file):
 
 if __name__ == '__main__':
     
-    user_filename = "../data/epinions/input/users.txt"
+    #user_filename = "../data/epinions/input/users.txt"
+    user_filename = "../data/epinions/input/prova.txt"
     with open(user_filename, 'w', encoding="utf8") as user_file:
         filename = "../data/epinions/input/epinions.json"
         users, u_id, i_id, item_id, user_id, df = read_ratings(filename, user_file)
@@ -82,7 +83,15 @@ if __name__ == '__main__':
         df['user_id'] = user_id
         df['item_id'] = shifted_item_id
         rating = df[['user_id', 'item_id', 'stars']]
-        rating.to_csv("../data/epinions/input/rating.txt", sep='\t', header=False, index=False)
+        #rating.to_csv("../data/epinions/input/rating.txt", sep='\t', header=False, index=False)
         #print(u_id)
         #print(i_id)
+    clustering_filename = "../data/epinions/input/clustering.txt"
+    clustering_id_filename = "../data/epinions/input/clustering_id.txt"
+    with open(clustering_id_filename, 'w', encoding="utf8") as clustering_id_file:
+        with open(clustering_filename, 'r', encoding="utf8") as clustering_file:
+            for line in clustering_file:
+                line = line.split()
+                clustering_id_file.write("%d\t%s\n" %(users[line[0]], line[1]))
+            
     

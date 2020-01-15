@@ -58,11 +58,20 @@ def prediction(args, numfolds):
 		id_to_th = {j: i for i, j in enumerate(entities)}
         
         # Classification
-		profile = list()
-		profile_filename = args.inputpath + "random_profile.txt"
+		n_cluster = 2
+		#profile = list()
+		#profile_filename = args.inputpath + "random_profile.txt"
+		#with open(profile_filename, mode='r') as f:
+		#    for line in f:
+		#        profile.append(int(line))
+
+		profile = dict()
+		profile_filename = args.inputpath + "clustering_id.txt"
 		with open(profile_filename, mode='r') as f:
 		    for line in f:
-		        profile.append(int(line))
+		        line = line.split()
+		        profile.update({int(line[0]):int(line[1])})
+        
         
 		# Dr: set of the highest rated entities
 		p_graph = args.graphpath + "p_graph_%s_%d.txt" % (args.graphparas, fold)
@@ -77,7 +86,9 @@ def prediction(args, numfolds):
         # Profile's preferences
 		items_profile = list()
 		for i in range(args.max_i_id + 1 - args.min_i_id):
-		    items_profile.append([0, 0, 0, 0, 0])
+		    items_profile.append([])
+		    for z in range(n_cluster):
+		        items_profile[i].append(0)
 		    for j in range(len(Dr[i + args.min_i_id])):
 		    	items_profile[i][profile[Dr[i + args.min_i_id][j]]] += 1
             
