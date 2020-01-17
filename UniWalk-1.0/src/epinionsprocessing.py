@@ -86,8 +86,10 @@ if __name__ == '__main__':
         #rating.to_csv("../data/epinions/input/rating.txt", sep='\t', header=False, index=False)
         #print(u_id)
         #print(i_id)
-    clustering_filename = "../data/epinions/input/clustering.txt"
-    clustering_id_filename = "../data/epinions/input/clustering_id.txt"
+    #clustering_filename = "../data/epinions/input/clustering.txt"
+    #clustering_id_filename = "../data/epinions/input/clustering_id.txt"
+    clustering_filename = "../data/epinions/input/clusterFinal.csv"
+    clustering_id_filename = "../data/epinions/input/clustering_id4.txt"
     with open(clustering_id_filename, 'w', encoding="utf8") as clustering_id_file:
         with open(clustering_filename, 'r', encoding="utf8") as clustering_file:
             for line in clustering_file:
