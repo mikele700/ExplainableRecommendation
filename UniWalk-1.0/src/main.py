@@ -29,8 +29,10 @@ from par import parse_args, set_paras, set_files, set_basic_info, print_args
 from embedding import embedding
 from prediction import prediction
 from build_graph import build_graph
-#from split_5_folds import split_5_folds
+from split_5_folds import split_5_folds
 from xval import xval
+from holdout import holdout
+import numpy as np
 sys.path.insert(0, os.path.dirname(os.path.abspath('.')))
 
 
@@ -63,33 +65,44 @@ if __name__ == '__main__':
 	# 2. Split input ratings into 5 folds
 	#split_5_folds(args.dataset, 5)
 	#xval(args.dataset, 5)
+	#holdout(args.dataset, 30)
 
 	# 3. Build graph
-	#build_graph(args, 5)
+	#build_graph(args, 30)
 
 	# 4. Learn
-	numfold = 1
+	numfold = 30
 	sampling_type = ['positive', 'negative', 'unweighted']
 	Train_RMSEs = list()
 	min_TestRMSEs = list()
 	min_TestMAEs = list()
 	
-	#for fold in range(numfold):
-	#	rmse, min_TestRMSE, min_TestMAE = embedding(args, fold, sampling_type)
-	#	prtstr = "Fold = %d, rmse = %.3f" % (fold, rmse)
-	#	print(prtstr)
-	#	prtstr = "Fold = %d, min rmse = %.3f" % (fold, min_TestRMSE)
-	#	print(prtstr)
-	#	prtstr = "Fold = %d, min mae = %.3f" % (fold, min_TestMAE)
-	#	print(prtstr)
-	#	Train_RMSEs.append(rmse)
-	#	min_TestRMSEs.append(min_TestRMSE)
-	#	min_TestMAEs.append(min_TestMAE)
+	for fold in range(numfold):
+		rmse, min_TestRMSE, min_TestMAE = embedding(args, fold, sampling_type)
+		prtstr = "Fold = %d, rmse = %.3f" % (fold, rmse)
+		print(prtstr)
+		prtstr = "Fold = %d, min rmse = %.3f" % (fold, min_TestRMSE)
+		print(prtstr)
+		prtstr = "Fold = %d, min mae = %.3f" % (fold, min_TestMAE)
+		print(prtstr)
+		Train_RMSEs.append(rmse)
+		min_TestRMSEs.append(min_TestRMSE)
+		min_TestMAEs.append(min_TestMAE)
 	
 	#prtstr = "Train RMSEs = %s" % Train_RMSEs
 	#print(prtstr)
 	
 	# 5. Prediction
 	Test_RMSEs, Test_MAEs = prediction(args, numfold)
+	err_filename = "../data/%s/prediction/err.txt" % (args.dataset)
+	with open(err_filename, mode='w') as f:
+		for i in range(numfold):
+		    f.write("%.5f\t" %Test_RMSEs[i])
+		f.write("\n")
+		for i in range(numfold):
+		    f.write("%.5f\t" %Test_MAEs[i])
+		f.write("\n%.5f\n%.5f" %(np.mean(Test_RMSEs), np.mean(Test_MAEs)))
+	print("Mean RMSE: %.5f\nMean MAE: %.5f" %(np.mean(Test_RMSEs), np.mean(Test_MAEs)))
+        
 
 	

@@ -58,19 +58,22 @@ def prediction(args, numfolds):
 		id_to_th = {j: i for i, j in enumerate(entities)}
         
         # Classification
-		n_cluster = 2
-		#profile = list()
-		#profile_filename = args.inputpath + "random_profile.txt"
-		#with open(profile_filename, mode='r') as f:
-		#    for line in f:
-		#        profile.append(int(line))
+		n_cluster = 4
 
-		profile = dict()
-		profile_filename = args.inputpath + "clustering_id.txt"
-		with open(profile_filename, mode='r') as f:
-		    for line in f:
-		        line = line.split()
-		        profile.update({int(line[0]):int(line[1])})
+		if args.dataset == "epinions":
+		    profile = dict()
+		    profile_filename = args.inputpath + "clustering_id4.txt"
+		    with open(profile_filename, mode='r') as f:
+		        for line in f:
+		            line = line.split()
+		            profile.update({int(line[0]):int(line[1])})
+		else:
+		    profile = list()
+		    profile_filename = args.inputpath + "random_profile.txt"
+		    with open(profile_filename, mode='r') as f:
+		        for line in f:
+		            profile.append(int(line))
+                    
         
         
 		# Dr: set of the highest rated entities
