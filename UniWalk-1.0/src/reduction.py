@@ -35,17 +35,19 @@ if __name__ == '__main__':
         #link = link.loc[((link['node1'] < threshold_rating) | (link['node1'] > threshold_link)) & ((link['node2'] < threshold_rating) | (link['node2'] > threshold_link))]
         link = link.loc[((link['node1'] < threshold_rating) & (link['node2'] < threshold_rating))]
         
-        id_nodes = pd.read_csv("../data/%s/input/clustering_id4.txt" % args.dataset, sep='\t', names=['id', 'cluster'])
-        rating_filename = "../data/%s/input/reducted_rating_%d_clusterized.txt" % (args.dataset, threshold_rating)
+        id_nodes = pd.read_csv("../data/%s/input/clustering_id7.txt" % args.dataset, sep='\t', names=['id', 'cluster'])
+        id_n = list(map(int, id_nodes['id']))
+        rating_filename = "../data/%s/input/reducted_rating_%d_clusterized7.txt" % (args.dataset, threshold_rating)
         with open(rating_filename, 'w', encoding="utf8") as rating_file:
             for index, row in rating.iterrows():
-                if row['user_id'] in id_nodes['id']:
-                    rating_file.write("%s\t%s\t%s\n" %(row['user_id'], row['item_id'], row['rating']))
-        link_filename = "../data/%s/input/reducted_link_%d_clusterized.txt" % (args.dataset, threshold_rating)
+                if int(row['user_id']) in id_n:
+                    rating_file.write("%d\t%d\t%s\n" %(int(row['user_id']), int(row['item_id']), row['rating']))
+        link_filename = "../data/%s/input/reducted_link_%d_clusterized7.txt" % (args.dataset, threshold_rating)
         with open(link_filename, 'w', encoding="utf8") as link_file:
             for index, row in link.iterrows():
-                if (row['node1'] in id_nodes['id']) and (row['node2'] in id_nodes['id']):
+                if (int(row['node1']) in id_n) and (int(row['node2']) in id_n):
                     link_file.write("%s\t%s\n" %(row['node1'], row['node2']))
+                    
         
         #rating.to_csv("../data/%s/input/reducted_rating_%d.txt" % (args.dataset, threshold_rating), sep='\t', header=False, index=False)
         #link.to_csv("../data/%s/input/reducted_link_%d.txt" % (args.dataset, threshold_rating), sep='\t', header=False, index=False)
