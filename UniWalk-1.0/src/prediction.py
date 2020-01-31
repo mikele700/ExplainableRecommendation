@@ -48,7 +48,8 @@ def prediction(args, numfolds):
 		bias_filename = args.learningpath + "bias_" + args.learningparas + "_%d.txt" % fold
 		ent_filename = args.learningpath + "entities_" + args.learningparas + "_%d.txt" % fold
 
-		test_filename = args.inputpath + "test%d.csv" % fold
+		#test_filename = args.inputpath + "test%d.csv" % fold
+		test_filename = args.inputpath + "b%d.csv" % fold
 
 		# Read test set, entities' indices, vectors, and biases
 		test = pd.read_csv(test_filename, sep='\t', names=['u', 'i', 'r'])
@@ -58,9 +59,10 @@ def prediction(args, numfolds):
 		id_to_th = {j: i for i, j in enumerate(entities)}
         
         # Classification
-		n_cluster = 4
+		n_cluster = 7
+		random_clustering = 1
 
-		if args.dataset == "epinions":
+		if (args.dataset == "epinions") and (random_clustering != 1):
 		    profile = dict()
 		    profile_filename = args.inputpath + "clustering_id4.txt"
 		    with open(profile_filename, mode='r') as f:
@@ -128,6 +130,11 @@ def prediction(args, numfolds):
 				hat_r_ui = (maxR - minR) * (np.random.random()) + minR
 				# hat_r_ui = round_0_5(hat_r_ui)
 				prediction.append(hat_r_ui)
+				top_items.append(top_3_items)
+				top_item_similarities.append(top_3_item_similarities)
+				top_users.append(top_3_users)
+				top_user_similarities.append(top_3_user_similarities)
+				friends.append(friends_liked)
 				continue
 
 			# If user and item are learned in train
@@ -186,6 +193,7 @@ def prediction(args, numfolds):
         
         
 		# 5. Save the prediction results
+		print("")
 		pred_filename = "../data/%s/prediction/pred_%d.txt" % (args.dataset, fold)
 		with open(pred_filename, mode='w') as f:
 			for u, i, p, ti, tis, tu, tus, fr in zip(test.u, test.i, prediction, top_items, top_item_similarities, top_users, top_user_similarities, friends):
