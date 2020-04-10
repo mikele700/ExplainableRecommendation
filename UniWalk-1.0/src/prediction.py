@@ -9,6 +9,8 @@ Authors
 - Junghwan Kim (kjh900809@snu.ac.kr)
 - Beunguk Ahn (elaborate@snu.ac.kr)
 - U Kang (ukang@snu.ac.kr)
+- Michele Pommella
+- Stefano Paradisone
 
 File
 - prediction.py
